@@ -1,0 +1,32 @@
+@use 'styles/variable.scss';
+
+.totalWidth {
+  width: 100%;
+}
+.indexLayout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  // background-color: #d4d8db;
+  padding: 20px 0 20px 0;
+  margin-right: 200px;
+  margin-left: 200px;
+}
+
+.alignementRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.containerForm {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  width: 100%;
+  padding: 20px 0 20px 0;
+  margin: 10px 0 10px 0;
+}

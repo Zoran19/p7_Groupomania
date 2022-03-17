@@ -1,0 +1,13 @@
+$background-color: #f0f2f5;
+$breackpoints:(mobile: 767px, tablette-max:992px, tablette-min:768px, desktop:993px);
+@mixin mobile-only {
+  @media screen and (min-width: map-get($breackpoints, mobile)) {
+    @content;
+  }
+}
+
+@mixin desktop-only {
+  @media screen and (min-width: map-get($breackpoints, desktop)) {
+    @content;
+  }
+}

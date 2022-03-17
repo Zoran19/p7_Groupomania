@@ -1,0 +1,35 @@
+@use 'styles/variable.scss';
+
+.alignementRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  @include variable.desktop-only {
+    flex-direction: row;
+  }
+}
+
+.containerForm {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  padding: 20px;
+
+}
+
+.imageLogin {
+  display: none;
+  @include variable.desktop-only {
+    display: flex;
+  }
+}
+
+.imageLoginMobile {
+  display: initial;
+  padding: 10px;
+  margin-top: 30px;
+  @include variable.desktop-only {
+    display: none;
+  }
+}
