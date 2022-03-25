@@ -164,7 +164,7 @@ module.exports = {
     if (userId < 0) return res.status(400).json({ error: "wrong token" });
 
     models.User.findOne({
-      attributes: ["id", "email", "firstName", "lastName", "bio"],
+      attributes: ["id", "email", "firstName", "lastName", "bio", "isAdmin"],
       where: { id: userId },
     })
       .then(function (user) {

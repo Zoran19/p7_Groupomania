@@ -83,7 +83,7 @@ module.exports = {
     );
   },
 
-  listCommentaries: function (req, res) {
+  listCommentariesById: function (req, res) {
     // Params
     let publicationId = parseInt(req.params.publicationId);
     if (publicationId <= 0) {
@@ -116,6 +116,7 @@ module.exports = {
       function (publicationFound) {
         if (publicationFound) {
           models.Commentary.findAll({
+            where: { publicationId: publicationId },
             limit: !isNaN(limit) ? limit : null,
             offset: !isNaN(offset) ? offset : null,
             include: [
@@ -143,6 +144,45 @@ module.exports = {
     ]);
   },
 
+  listCommentaries: function (req, res) {
+    // Params
+
+    var limit = parseInt(req.query.limit);
+    var offset = parseInt(req.query.offset);
+
+    if (limit > ITEMS_LIMIT) {
+      limit = ITEMS_LIMIT;
+    }
+
+    asyncLib.waterfall([
+      function () {
+        {
+          models.Commentary.findAll({
+            limit: !isNaN(limit) ? limit : null,
+            offset: !isNaN(offset) ? offset : null,
+            include: [
+              {
+                model: models.User,
+                attributes: ["firstName", "lastName"],
+              },
+            ],
+          })
+            .then(function (commentaries) {
+              if (commentaries) {
+                res.status(200).json(commentaries);
+              } else {
+                res.status(404).json({ error: "no commentaries found" });
+              }
+            })
+            .catch(function (err) {
+              console.log(err);
+              res.status(500).json({ error: "invalid fields" });
+            });
+        }
+      },
+    ]);
+  },
+
   deleteCommentary: async function (req, res) {
     // Getting auth header
     var headerAuth = req.headers["authorization"];
@@ -158,10 +198,12 @@ module.exports = {
 
     models.Commentary.findOne({ where: { id: commentaryId } })
       .then((post) => {
+        console.log("user.isAdmin", user.isAdmin);
         if (post.UserId === userId || user.isAdmin) {
-          models.Commentary.destroy({
-            where: { id: commentaryId },
-          })
+          post
+            .destroy({
+              where: { id: commentaryId },
+            })
             .then(() =>
               res.status(201).json({ message: "publication supprimé !" })
             )

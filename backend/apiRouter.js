@@ -14,9 +14,12 @@ exports.router = (function () {
   apiRouter.route("/users/login/").post(usersCtrl.login);
   apiRouter.route("/users/me/").get(usersCtrl.getUserProfile);
   apiRouter.route("/users/me/").put(usersCtrl.updateUserProfile);
+  const multer = require("../middleware/multer-config");
 
   // publications routes
-  apiRouter.route("/publications").post(publicationsCtrl.createPublication);
+  apiRouter
+    .route("/publications")
+    .post(multer, publicationsCtrl.createPublication);
   apiRouter.route("/publications/").get(publicationsCtrl.listPublications);
   apiRouter
     .route("/publications/:publicationId")
@@ -39,8 +42,11 @@ exports.router = (function () {
     .post(commentaryCtrl.createCommentary);
 
   apiRouter
-    .route("/publications/:publicationId/comments")
+    .route("/publications/comments")
     .get(commentaryCtrl.listCommentaries);
+  apiRouter
+    .route("/publications/:publicationId/comments")
+    .get(commentaryCtrl.listCommentariesById);
 
   apiRouter
     .route("/publications/:publicationId/comments/:commentaryId")
