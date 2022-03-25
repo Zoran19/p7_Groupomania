@@ -1,8 +1,11 @@
 import { fetchApi } from "./fetchApi";
 import useSWRImmutable from "swr/immutable";
 
-export const useProfil = () => {
-  const { data, error, mutate } = useSWRImmutable("users/me", fetchApi);
+export const useCommentaries = (id) => {
+  const { data, error, mutate } = useSWRImmutable(
+    `publications/${id}/comments`,
+    fetchApi
+  );
 
   const loading = !data && !error;
 

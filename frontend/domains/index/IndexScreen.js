@@ -6,7 +6,7 @@ import { IndexPublication } from "./IndexPublication";
 
 export function IndexScreen({ loading, publications, refreshPublications }) {
   return (
-    <div className={styles.alignementRow}>
+    <div className={`${styles.alignementRow} ${styles.containerIndex}`}>
       <IndexForm refreshPublications={refreshPublications} />
       {loading
         ? null

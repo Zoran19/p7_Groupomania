@@ -1,29 +1,42 @@
-@use 'styles/variable.scss';
-.totalWidth {
-  width: 100%; }
+/*
+Error: Invalid CSS after "...nclude variable": expected "}", was ".desktop-only {"
+        on line 12 of index.module.scss
 
-.indexLayout {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 20px 0 20px 0;
-  margin-right: 200px;
-  margin-left: 200px; }
+7:   display: flex;
+8:   justify-content: center;
+9:   align-items: center;
+10:   flex-direction: column;
+11:   padding: 20px 0 20px 0;
+12:   @include variable.desktop-only {
+13:     margin-right: 200px;
+14:     margin-left: 200px;
+15:   }
+16: }
+17: 
 
-.alignementRow {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%; }
-
-.containerForm {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  width: 100%;
-  padding: 20px 0 20px 0;
-  margin: 10px 0 10px 0; }
-
-/*# sourceMappingURL=index.module.css.map */
+Backtrace:
+index.module.scss:12
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/scss/parser.rb:1308:in `expected'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/scss/parser.rb:1238:in `expected'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/scss/parser.rb:1233:in `tok!'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/scss/parser.rb:690:in `block'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/scss/parser.rb:681:in `ruleset'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/scss/parser.rb:707:in `block_child'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/scss/parser.rb:700:in `block_contents'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/scss/parser.rb:137:in `stylesheet'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/scss/parser.rb:41:in `parse'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/engine.rb:414:in `_to_tree'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/engine.rb:389:in `_render_with_sourcemap'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/engine.rb:307:in `render_with_sourcemap'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/exec/sass_scss.rb:387:in `run'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/exec/sass_scss.rb:63:in `process_result'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/exec/base.rb:50:in `parse'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/lib/sass/exec/base.rb:18:in `parse!'
+/Users/admin/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/sass-3.7.4/bin/sass:13:in `<top (required)>'
+/Users/admin/.rbenv/versions/2.5.1/bin/sass:23:in `load'
+/Users/admin/.rbenv/versions/2.5.1/bin/sass:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Invalid CSS after \"...nclude variable\": expected \"}\", was \".desktop-only {\"\A         on line 12 of index.module.scss\A \A 7:   display: flex;\A 8:   justify-content: center;\A 9:   align-items: center;\A 10:   flex-direction: column;\A 11:   padding: 20px 0 20px 0;\A 12:   @include variable.desktop-only {\A 13:     margin-right: 200px;\A 14:     margin-left: 200px;\A 15:   }\A 16: }\A 17: "; }

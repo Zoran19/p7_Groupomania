@@ -4,7 +4,7 @@ import { ProfilScreen } from "../domains/profil/ProfilScreen";
 import { useProfil } from "../api/useProfil";
 
 export default function Profil() {
-  const { data, loading, mutate: refreshProfil } = useProfil();
+  const { data, loading, mutate: refreshProfil, error } = useProfil();
 
   return (
     <div>

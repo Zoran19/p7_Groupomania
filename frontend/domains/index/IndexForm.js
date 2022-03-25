@@ -53,16 +53,22 @@ export function IndexForm({ refreshPublications }) {
                 />
               </Grid>
               <Typography color={"error"}>{errors.content?.message}</Typography>
-              <Grid item xs={4}>
-                <Button
+              <Grid item sm={4} xs={6} mb={1} style={{ width: "100%" }}>
+                {/*   <Button
                   type="submit"
                   fullWidth
                   variant="contained"
                   color="primary"
-                  size="large"
+                  type="file"
+                    name="uploadFile"
+                    accept=".json"
                 >
                   Ajouter une image
-                </Button>
+                </Button>*/}
+
+                <input type="file" name="uploadFile" accept="image/*" />
+                <br />
+                <br />
               </Grid>
             </Grid>{" "}
             <Grid item xs={12} pb={1} className={styles.alignementRow}>

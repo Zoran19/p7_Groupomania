@@ -38,6 +38,9 @@ module.exports = {
               content: content,
               likes: 0,
               UserId: userFound.id,
+              attachment: `${req.protocol}://${req.get("host")}/images/${
+                req.file.filename
+              }`,
             }).then(function (newPublication) {
               done(newPublication);
             });
@@ -102,6 +105,11 @@ module.exports = {
       .then((post) => {
         if (post.UserId === userId || user.isAdmin) {
           models.Like.destroy({ where: { publicationId: publicationId } })
+            .then(() =>
+              models.Commentary.destroy({
+                where: { publicationId: publicationId },
+              })
+            )
             .then(() =>
               models.Publication.destroy({ where: { id: publicationId } })
                 .then(() =>

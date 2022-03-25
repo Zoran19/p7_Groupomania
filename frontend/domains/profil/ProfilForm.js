@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { fetchApi } from "../../api/fetchApi";
 import { useRouter } from "next/router";
 
-export function ProfilForm({ profil }) {
+export function ProfilForm({ profil, refreshProfil }) {
   const {
     register,
     handleSubmit,
@@ -22,7 +22,7 @@ export function ProfilForm({ profil }) {
   const submit = async (data) => {
     const loginData = await fetchApi("users/me", "PUT", {
       bio: data.bio,
-    });
+    }).then(() => refreshProfil());
     void router.push("/");
   };
 

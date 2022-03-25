@@ -6,7 +6,9 @@ import { ProfilForm } from "./ProfilForm";
 export function ProfilScreen({ loading, profil, refreshProfil }) {
   return (
     <div className={styles.alignementRow}>
-      {loading ? null : <ProfilForm profil={profil} />}
+      {loading ? null : (
+        <ProfilForm profil={profil} refreshProfil={refreshProfil} />
+      )}
     </div>
   );
 }

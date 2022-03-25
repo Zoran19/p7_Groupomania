@@ -1,8 +1,8 @@
 import { fetchApi } from "./fetchApi";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 
 export const usePublications = () => {
-  const { data, error, mutate } = useSWR("publications", fetchApi);
+  const { data, error, mutate } = useSWRImmutable("publications", fetchApi);
 
   const loading = !data && !error;
 

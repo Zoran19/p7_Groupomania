@@ -10,8 +10,11 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { fetchApi } from "../../api/fetchApi";
+import { useSWRConfig } from "swr";
 
 export function LoginForm() {
+  const { cache } = useSWRConfig();
+
   const {
     register,
     handleSubmit,
@@ -25,19 +28,12 @@ export function LoginForm() {
       email: data.email,
       password: data.password,
     });
-    // const loginData = await fetch("http://localhost:8080/api/users/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   // credentials: "include",
-    //   body: JSON.stringify({
-    //     email: data.email,
-    //     password: data.password,
-    //   }),
-    // }).then((response) => response.json());
     localStorage.setItem("jwt_token", loginData.token);
     console.log(loginData);
     console.log(loginData.token);
-    void router.push("/");
+    cache.clear();
+
+    router.push("/");
   };
 
   console.log(errors);

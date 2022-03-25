@@ -8,10 +8,11 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  // background-color: #d4d8db;
   padding: 20px 0 20px 0;
-  margin-right: 200px;
-  margin-left: 200px;
+  @include variable.desktop-only {
+    margin-right: 200px;
+    margin-left: 200px;
+  }
 }
 
 .alignementRow {
@@ -21,12 +22,45 @@
   flex-direction: column;
   width: 100%;
 }
-
+.containerIndex {
+  @include variable.mobile-only {
+    width: 90%;
+  }
+}
 .containerForm {
   background-color: white;
   border-radius: 8px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   width: 100%;
-  padding: 20px 0 20px 0;
   margin: 10px 0 10px 0;
+  padding: 20px 0 20px 0;
+
+  @include variable.mobile-only {
+    margin: 10px;
+  }
+}
+
+.publicationMessageContainer {
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.messageContainer {
+  background-color: #ededed;
+  padding: 10px;
+  border-radius: 5px;
+
+  @include variable.mobile-only {
+    width: 50%;
+  }
+}
+
+.containerLogoMessage {
+  display: flex;
+  flex-direction: row;
+
+  @include variable.mobile-only {
+    flex-direction: column;
+  }
 }
