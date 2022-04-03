@@ -3,16 +3,15 @@ import React from "react";
 import { LoginImage } from "./LoginImage";
 import styles from "../../pages/authentification/login.module.scss";
 
-export function LoginScreen(props) {
+export function LoginScreen() {
   return (
     <div className={styles.alignementRow}>
       <div
-        style={{ width: "100%" }}
-        className={`${styles.alignementRow} ${styles.imageLogin}`}
+        className={`${styles.alignementRow} ${styles.imageLogin} ${styles.totalWidth}`}
       >
         <LoginImage />
       </div>
-      <div style={{ width: "100%" }} className={styles.alignementRow}>
+      <div className={`${styles.alignementRow}  ${styles.totalWidth}`}>
         <LoginForm />
       </div>
     </div>

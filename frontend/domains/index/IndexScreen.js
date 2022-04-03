@@ -5,13 +5,18 @@ import { IndexForm } from "./IndexForm";
 import { IndexPublication } from "./IndexPublication";
 
 export function IndexScreen({ loading, publications, refreshPublications }) {
+  if (publications) {
+    let reversePublications = [...publications].reverse();
+  }
+
   return (
     <div className={`${styles.alignementRow} ${styles.containerIndex}`}>
       <IndexForm refreshPublications={refreshPublications} />
       {loading
         ? null
-        : publications.map((publication) => (
+        : reversePublications.map((publication) => (
             <IndexPublication
+              id={publication.id}
               key={publication.id}
               publication={publication}
               refreshPublications={refreshPublications}

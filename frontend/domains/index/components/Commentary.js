@@ -21,7 +21,6 @@ export const Commentary = ({
     !loadingProfile &&
     profile &&
     (profile.id === commentary.UserId || profile.isAdmin === true);
-  console.log("canEditOrDelete", canEditOrDelete);
 
   const [showEditCommentaryForm, setShowEditCommentaryForm] = useState(false);
   const {
@@ -29,11 +28,6 @@ export const Commentary = ({
     handleSubmit: handleSubmitUpdateComment,
     formState: { errorsUpdateComment },
   } = useForm();
-
-  // const {
-  //   handleSubmit: handleSubmitDeleteComment,
-  //   formState: { errorsDeleteComment },
-  // } = useForm();
 
   function submitUpdateCommentary(idCommentary) {
     return async (upComm) => {
@@ -119,7 +113,7 @@ export const Commentary = ({
               setShowEditCommentaryForm((prevState) => !prevState);
             }}
           >
-            <EditIcon />
+            <EditIcon className={styles.buttonDeleteAndUpdate} />
           </Button>
 
           <Button
@@ -128,7 +122,10 @@ export const Commentary = ({
               submitDeleteCommentary(commentary.id);
             }}
           >
-            <DeleteIcon fontSize={"large"} color={"error"} />
+            <DeleteIcon
+              className={styles.buttonDeleteAndUpdate}
+              color={"error"}
+            />
           </Button>
         </Grid>
       ) : null}

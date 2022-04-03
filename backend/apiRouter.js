@@ -4,57 +4,91 @@ let usersCtrl = require("./routes/usersCtrl");
 let publicationsCtrl = require("./routes/publicationsCtrl");
 let likesCtrl = require("./routes/likesCtrl");
 let commentaryCtrl = require("./routes/commentaryCtrl");
+const uploadCtrl = require("./routes/upload");
+const auth = require("../backend/middleware/auth");
+//const multers = require("../backend/middleware/multer-config");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: "./uploads/",
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+// TODO: Il n'y a pas de restrictions sur le type de fichier ou la taille
+const uploadMiddleware = multer({ storage: storage });
 
 // Router
 exports.router = (function () {
   let apiRouter = express.Router();
 
   // Users routes
-  apiRouter.route("/users/register/").post(usersCtrl.register);
-  apiRouter.route("/users/login/").post(usersCtrl.login);
-  apiRouter.route("/users/me/").get(usersCtrl.getUserProfile);
-  apiRouter.route("/users/me/").put(usersCtrl.updateUserProfile);
-  const multer = require("../middleware/multer-config");
+  apiRouter.post("/users/register/", usersCtrl.register);
+  apiRouter.post("/users/login/", usersCtrl.login);
+  apiRouter.get("/users/me/", auth, usersCtrl.getUserProfile);
+  apiRouter.put("/users/me/", auth, usersCtrl.updateUserProfile);
+  apiRouter.delete("/users/me/", auth, usersCtrl.deleteUserProfile);
 
   // publications routes
-  apiRouter
-    .route("/publications")
-    .post(multer, publicationsCtrl.createPublication);
-  apiRouter.route("/publications/").get(publicationsCtrl.listPublications);
-  apiRouter
-    .route("/publications/:publicationId")
-    .delete(publicationsCtrl.deletePublication);
-  apiRouter
-    .route("/publications/:publicationId")
-    .put(publicationsCtrl.updatePublication);
+  apiRouter.post("/publications", auth, publicationsCtrl.createPublication);
+  apiRouter.get("/publications/", auth, publicationsCtrl.listPublications);
+  apiRouter.delete(
+    "/publications/:publicationId",
+    auth,
+    publicationsCtrl.deletePublication
+  );
+  apiRouter.put(
+    "/publications/:publicationId",
+    auth,
+    publicationsCtrl.updatePublication
+  );
 
   // Likes
-  apiRouter
-    .route("/publications/:publicationId/vote/like")
-    .post(likesCtrl.likePost);
-  apiRouter
-    .route("/publications/:publicationId/vote/dislike")
-    .post(likesCtrl.dislikePost);
+  apiRouter.post(
+    "/publications/:publicationId/vote/like",
+    auth,
+    likesCtrl.likePost
+  );
+  apiRouter.post(
+    "/publications/:publicationId/vote/dislike",
+    auth,
+    likesCtrl.dislikePost
+  );
 
   //Commentary
-  apiRouter
-    .route("/publications/:publicationId/comments")
-    .post(commentaryCtrl.createCommentary);
+  apiRouter.post(
+    "/publications/:publicationId/comments",
+    auth,
+    commentaryCtrl.createCommentary
+  );
+  apiRouter.get(
+    "/publications/comments",
+    auth,
+    commentaryCtrl.listCommentaries
+  );
+  apiRouter.get(
+    "/publications/:publicationId/comments",
+    auth,
+    commentaryCtrl.listCommentariesById
+  );
+  apiRouter.delete(
+    "/publications/:publicationId/comments/:commentaryId",
+    auth,
+    commentaryCtrl.deleteCommentary
+  );
+  apiRouter.put(
+    "/publications/:publicationId/comments/:commentaryId",
+    auth,
+    commentaryCtrl.updateCommentary
+  );
 
-  apiRouter
-    .route("/publications/comments")
-    .get(commentaryCtrl.listCommentaries);
-  apiRouter
-    .route("/publications/:publicationId/comments")
-    .get(commentaryCtrl.listCommentariesById);
-
-  apiRouter
-    .route("/publications/:publicationId/comments/:commentaryId")
-    .delete(commentaryCtrl.deleteCommentary);
-
-  apiRouter
-    .route("/publications/:publicationId/comments/:commentaryId")
-    .put(commentaryCtrl.updateCommentary);
+  // Upload route
+  apiRouter.post(
+    "/upload",
+    // auth,
+    uploadMiddleware.single("file"),
+    uploadCtrl.upload
+  );
 
   return apiRouter;
 })();

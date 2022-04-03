@@ -1,6 +1,6 @@
-var models = require("../models");
-var asyncLib = require("async");
-var jwtUtils = require("../utils/jwt.utils");
+const models = require("../models");
+const asyncLib = require("async");
+const jwtUtils = require("../utils/jwt.utils");
 
 const ITEMS_LIMIT = 50;
 
@@ -8,8 +8,7 @@ const ITEMS_LIMIT = 50;
 module.exports = {
   createPublication: function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
-    var userId = jwtUtils.getUserId(headerAuth);
+    let userId = res.locals.user.id;
 
     // Params
     var content = req.body.content;
@@ -18,45 +17,16 @@ module.exports = {
       return res.status(400).json({ error: "missing parameters" });
     }
 
-    asyncLib.waterfall(
-      [
-        function (done) {
-          models.User.findOne({
-            where: { id: userId },
-          })
-            .then(function (userFound) {
-              done(null, userFound);
-            })
-            .catch(function (err) {
-              console.error(err);
-              return res.status(500).json({ error: "unable to verify user" });
-            });
-        },
-        function (userFound, done) {
-          if (userFound) {
-            models.Publication.create({
-              content: content,
-              likes: 0,
-              UserId: userFound.id,
-              attachment: `${req.protocol}://${req.get("host")}/images/${
-                req.file.filename
-              }`,
-            }).then(function (newPublication) {
-              done(newPublication);
-            });
-          } else {
-            res.status(404).json({ error: "user not found" });
-          }
-        },
-      ],
-      function (newPublication) {
-        if (newPublication) {
-          return res.status(201).json(newPublication);
-        } else {
-          return res.status(500).json({ error: "cannot post publication" });
-        }
-      }
-    );
+    models.Publication.create({
+      content: content,
+      attachment: req.body.attachment,
+      likes: 0,
+      UserId: userId,
+    })
+      .then(() => res.status(201).json({ message: "publi créer!" }))
+      .catch((error) =>
+        res.status(400).json({ error, message: error.message })
+      );
   },
   listPublications: function (req, res) {
     var limit = parseInt(req.query.limit);
@@ -91,8 +61,7 @@ module.exports = {
 
   deletePublication: async function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
-    var userId = jwtUtils.getUserId(headerAuth);
+    let userId = res.locals.user.id;
     const user = await models.User.findOne({ where: { id: userId } });
     // Params
     var publicationId = parseInt(req.params.publicationId);
@@ -136,8 +105,7 @@ module.exports = {
 
   updatePublication: async function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
-    var userId = jwtUtils.getUserId(headerAuth);
+    let userId = res.locals.user.id;
     const user = await models.User.findOne({ where: { id: userId } });
     // Params
     var publicationId = parseInt(req.params.publicationId);

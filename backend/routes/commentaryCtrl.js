@@ -8,8 +8,7 @@ const ITEMS_LIMIT = 50;
 module.exports = {
   createCommentary: function (req, res) {
     // Getting auth header
-    let headerAuth = req.headers["authorization"];
-    let userId = jwtUtils.getUserId(headerAuth);
+    let userId = res.locals.user.id;
 
     // Params
     let publicationId = parseInt(req.params.publicationId);
@@ -185,8 +184,7 @@ module.exports = {
 
   deleteCommentary: async function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
-    var userId = jwtUtils.getUserId(headerAuth);
+    let userId = res.locals.user.id;
     const user = await models.User.findOne({ where: { id: userId } });
     // Params
     var publicationId = parseInt(req.params.publicationId);
@@ -205,7 +203,7 @@ module.exports = {
               where: { id: commentaryId },
             })
             .then(() =>
-              res.status(201).json({ message: "publication supprimé !" })
+              res.status(201).json({ message: "commentaire supprimé !" })
             )
             .catch((error) =>
               res.status(400).json({ error, message: error.message })
@@ -228,8 +226,7 @@ module.exports = {
 
   updateCommentary: async function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
-    var userId = jwtUtils.getUserId(headerAuth);
+    let userId = res.locals.user.id;
     const user = await models.User.findOne({ where: { id: userId } });
     // Params
     let publicationId = parseInt(req.params.publicationId);
@@ -239,7 +236,7 @@ module.exports = {
       return res.status(400).json({ error: "invalid parameters" });
     }
 
-    models.Commentary.findOne({ where: { id: commentaryId } })
+    await models.Commentary.findOne({ where: { id: commentaryId } })
       .then((post) => {
         console.log("user.isAdmin", user.isAdmin);
         if (post.UserId === userId || user.isAdmin) {
@@ -247,10 +244,10 @@ module.exports = {
             .update({
               commentary: req.body.commentary,
             })
-            .then(res.status(201).json({ message: "commentaire modifié !" }))
-            .catch((error) =>
-              res.status(400).json({ error, message: error.message })
-            );
+            .then(() =>
+              res.status(201).json({ message: "commentaire modifié !" })
+            )
+            .catch((error) => res.status(400).json({ message: error.message }));
         } else {
           res.status(401).json({
             message: "Vous n'êtes pas autorisé à modifier ce post !",

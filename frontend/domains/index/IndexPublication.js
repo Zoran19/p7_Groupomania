@@ -2,7 +2,6 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import React from "react";
 import styles from "../../pages/index.module.scss";
-import Image from "next/image";
 import TextField from "@mui/material/TextField";
 import SendIcon from "@mui/icons-material/Send";
 import EditIcon from "@mui/icons-material/Edit";
@@ -28,6 +27,10 @@ export function IndexPublication({ publication, refreshPublications }) {
     formState: { errors },
   } = useForm();
 
+  const [showUpdateCommentaryForm, setShowUpdateCommentaryForm] = useState(
+    false
+  );
+
   const submitDelete = async () => {
     await fetchApi(`publications/${publication.id}`, "DELETE").then(() =>
       refreshPublications()
@@ -46,6 +49,10 @@ export function IndexPublication({ publication, refreshPublications }) {
       });
   };
 
+  const datePublication = publication.createdAt.split("T");
+  const split_string = datePublication[0].split("-");
+  const date = split_string.reverse().join("/");
+
   return (
     <div className={styles.containerForm}>
       <Grid>
@@ -61,9 +68,7 @@ export function IndexPublication({ publication, refreshPublications }) {
                 <Button
                   type="submit"
                   onClick={() => {
-                    if (displayEditPublication === "none") {
-                      setDisplayEditPublication("flex");
-                    } else setDisplayEditPublication("none");
+                    setShowUpdateCommentaryForm((prevState) => !prevState);
                   }}
                 >
                   <EditIcon />
@@ -81,49 +86,60 @@ export function IndexPublication({ publication, refreshPublications }) {
               </Grid>
             </Grid>
           ) : null}
+
+          <Grid item pl={2}>
+            <Typography className={styles.datePubli}>
+              date de publication: {date}
+            </Typography>
+          </Grid>
+
           <Grid item pl={2}>
             <h3>{publication.content}</h3>
           </Grid>
         </Grid>
-
-        <Grid>
-          <form
-            style={{ display: `${displayEditPublication}` }}
-            onSubmit={handleSubmit(submitUpdate)}
-          >
-            <Grid container direction={"row"} alignItems={"center"} pl={2}>
-              <Grid item sm={4} style={{ width: "80%" }}>
-                <TextField
-                  fullWidth
-                  label="modifier votre publication"
-                  variant="outlined"
-                  name="editContent"
-                  defaultValue={publication.content}
-                  id="outlined-multiline-static"
-                  {...register("contentFoo", {
-                    required: "Ce champ est obligatoire",
-                  })}
-                />
+        {showUpdateCommentaryForm && (
+          <Grid>
+            <form onSubmit={handleSubmit(submitUpdate)}>
+              <Grid
+                container
+                direction={"row"}
+                alignItems={"center"}
+                pl={2}
+                mb={2}
+              >
+                <Grid item sm={4} style={{ width: "80%" }}>
+                  <TextField
+                    autoFocus
+                    id="modifPubli"
+                    fullWidth
+                    label="modifier votre publication"
+                    variant="outlined"
+                    name="editContent"
+                    defaultValue={publication.content}
+                    {...register("contentFoo", {
+                      required: "Ce champ est obligatoire",
+                    })}
+                  />
+                </Grid>
+                <Grid item style={{ width: "20%" }}>
+                  <Button type="submit" fontSize="large">
+                    <SendIcon />
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item style={{ width: "20%" }}>
-                <Button type="submit" fontSize="large">
-                  <SendIcon />
-                </Button>
-              </Grid>
-            </Grid>
-          </form>{" "}
-          <Typography color={"error"} pl={2}>
-            {errors.contentFoo?.message}
-          </Typography>
-        </Grid>
+            </form>{" "}
+            <Typography color={"error"} pl={2}>
+              {errors.contentFoo?.message}
+            </Typography>
+          </Grid>
+        )}
 
         {!publication.attachment ? null : (
-          <Grid>
-            <Image
-              src={publication.attachment}
+          <Grid container justifyContent={"center"} alignItems={"center"}>
+            <img
+              src={`http://localhost:8080/uploads/${publication.attachment}`}
               alt="Picture of the author"
-              width={1200}
-              height={500}
+              className={styles.imagePubli}
             />
           </Grid>
         )}

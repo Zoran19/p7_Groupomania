@@ -14,6 +14,9 @@ server.use(cors());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 
+// static files (upload)
+server.use("/uploads", express.static("uploads"));
+
 // Configure routes
 server.get("/", function (req, res) {
   res.setHeader("Content-Type", "text/html");

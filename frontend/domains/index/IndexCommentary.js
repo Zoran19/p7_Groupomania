@@ -1,11 +1,8 @@
 import Grid from "@mui/material/Grid";
 import styles from "../../pages/index.module.scss";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Typography } from "@mui/material";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
@@ -16,9 +13,8 @@ import { useCommentaries } from "../../api/useCommentaries";
 import { fetchApi } from "../../api/fetchApi";
 import { usePublications } from "../../api/usePublications";
 import { Commentary } from "./components/Commentary";
-import { useProfil } from "../../api/useProfil";
 
-export function IndexCommentary({ publication, refreshPublication }) {
+export function IndexCommentary({ publication }) {
   const [showCreateCommentaryForm, setShowCreateCommentaryForm] = useState(
     false
   );
@@ -94,16 +90,53 @@ export function IndexCommentary({ publication, refreshPublication }) {
             />
           ))}
 
+      <Grid container mt={1} className={styles.containerButtonLikeAndComm}>
+        <Grid item pl={2} pt={2}>
+          <Button
+            variant="text"
+            onClick={() => {
+              like();
+            }}
+          >
+            <ThumbUpIcon />
+            <Typography className={styles.likePubli}>J'aime</Typography>
+          </Button>
+          <Button
+            variant="text"
+            onClick={() => {
+              dislike();
+            }}
+          >
+            <ThumbDownIcon color={"error"} />
+            <Typography color={"error"} className={styles.likePubli}>
+              J'aime pas
+            </Typography>
+          </Button>
+        </Grid>
+
+        <Grid item pl={2} pt={2}>
+          <Button
+            variant="text"
+            onClick={() => {
+              setShowCreateCommentaryForm((prevState) => !prevState);
+            }}
+          >
+            <ChatBubbleIcon />
+            <Typography className={styles.likePubli}>Commenter</Typography>
+          </Button>
+        </Grid>
+      </Grid>
       {showCreateCommentaryForm && (
         <form onSubmit={handleSubmitCreateComment(submitCreateCommentary)}>
           <Grid container alignItems={"center"} pt={2} pl={2}>
             <Grid item sm={10}>
               <TextField
+                autoFocus
+                id="commentaryCreate"
                 fullWidth
                 label="Créer votre commentaire"
                 variant="outlined"
                 name="comment"
-                id="outlined-multiline-static"
                 {...registerCreateComment("comment", {
                   required: "Ce champ est obligatoire",
                 })}
@@ -118,49 +151,6 @@ export function IndexCommentary({ publication, refreshPublication }) {
           </Grid>
         </form>
       )}
-
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mt={1}
-      >
-        <Grid item pl={2} pt={2}>
-          <Button
-            variant="text"
-            onClick={() => {
-              like();
-            }}
-          >
-            <ThumbUpIcon />
-            <Typography style={{ marginLeft: "5px" }}>J'aime</Typography>
-          </Button>
-          <Button
-            variant="text"
-            onClick={() => {
-              dislike();
-            }}
-          >
-            <ThumbDownIcon color={"error"} />
-            <Typography style={{ marginLeft: "5px" }} color={"error"}>
-              J'aime pas
-            </Typography>
-          </Button>
-        </Grid>
-
-        <Grid item p={2} pb={0}>
-          <Button
-            variant="text"
-            onClick={() => {
-              setShowCreateCommentaryForm((prevState) => !prevState);
-            }}
-          >
-            <ChatBubbleIcon />
-            <Typography style={{ marginLeft: "5px" }}>Commenter</Typography>
-          </Button>
-        </Grid>
-      </Grid>
     </div>
   );
 }

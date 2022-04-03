@@ -11,8 +11,7 @@ const LIKED = 1;
 module.exports = {
   likePost: function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
-    var userId = jwtUtils.getUserId(headerAuth);
+    let userId = res.locals.user.id;
 
     // Params
     var publicationId = parseInt(req.params.publicationId);
@@ -134,8 +133,7 @@ module.exports = {
   },
   dislikePost: function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
-    var userId = jwtUtils.getUserId(headerAuth);
+    let userId = res.locals.user.id;
 
     // Params
     var publicationId = parseInt(req.params.publicationId);
@@ -173,7 +171,7 @@ module.exports = {
                 return res.status(500).json({ error: "unable to verify user" });
               });
           } else {
-            res.status(404).json({ error: "post already liked" });
+            res.status(404).json({ error: "post already disliked" });
           }
         },
         function (publicationFound, userFound, done) {

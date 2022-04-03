@@ -12,7 +12,7 @@ Error: Invalid CSS after "...nclude variable": expected "}", was ".desktop-only 
 10:   }
 11: }
 12: 
-13: .containerForm {
+13: .totalWidth {
 
 Backtrace:
 login.module.scss:8
@@ -39,4 +39,4 @@ login.module.scss:8
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: Invalid CSS after \"...nclude variable\": expected \"}\", was \".desktop-only {\"\A         on line 8 of login.module.scss\A \A 3: .alignementRow {\A 4:   display: flex;\A 5:   justify-content: center;\A 6:   align-items: center;\A 7:   flex-direction: column;\A 8:   @include variable.desktop-only {\A 9:     flex-direction: row;\A 10:   }\A 11: }\A 12: \A 13: .containerForm {"; }
+  content: "Error: Invalid CSS after \"...nclude variable\": expected \"}\", was \".desktop-only {\"\A         on line 8 of login.module.scss\A \A 3: .alignementRow {\A 4:   display: flex;\A 5:   justify-content: center;\A 6:   align-items: center;\A 7:   flex-direction: column;\A 8:   @include variable.desktop-only {\A 9:     flex-direction: row;\A 10:   }\A 11: }\A 12: \A 13: .totalWidth {"; }

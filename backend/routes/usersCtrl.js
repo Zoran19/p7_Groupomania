@@ -1,21 +1,17 @@
-var bcrypt = require("bcrypt");
-var jwtUtils = require("../utils/jwt.utils");
-var models = require("../models");
-var asyncLib = require("async");
-
-// Constants
-const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
+const bcrypt = require("bcrypt");
+const models = require("../models");
+const asyncLib = require("async");
+const jwt = require("jsonwebtoken");
 
 // Routes
 module.exports = {
-  register: function (req, res) {
+  /* register: function (req, res) {
     // Params
-    var email = req.body.email;
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var password = req.body.password;
-    var bio = req.body.bio;
+    let email = req.body.email;
+    let firstName = req.body.firstName;
+    let lastName = req.body.lastName;
+    let password = req.body.password;
+    let bio = req.body.bio;
 
     if (
       email == null ||
@@ -74,7 +70,7 @@ module.exports = {
           }
         },
         function (userFound, bcryptedPassword, done) {
-          var newUser = models.User.create({
+          let newUser = models.User.create({
             email: email,
             firstName: firstName,
             lastName: lastName,
@@ -101,11 +97,70 @@ module.exports = {
         }
       }
     );
+  },*/
+
+  register: (req, res) => {
+    models.User.findOne({ where: { email: req.body.email } }).then((user) => {
+      if (user) {
+        return res.status(401).json({ error: "email déja utilisé !" });
+      } else {
+        bcrypt
+          .hash(req.body.password, 10)
+          .then((hash) => {
+            models.User.create({
+              email: req.body.email,
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              password: hash,
+              bio: req.body.bio,
+              isAdmin: 0,
+            })
+              .then(() =>
+                res.status(201).json({ message: "Utilisateur créé !" })
+              )
+              .catch((error) => res.status(400).json({ error }));
+          })
+          .catch((error) => res.status(500).json({ error }));
+      }
+    });
   },
-  login: function (req, res) {
+
+  login: (req, res) => {
+    if (req.body.email == null || req.body.password == null) {
+      return res.status(400).json({ error: "missing parameters" });
+    }
+    models.User.findOne({ where: { email: req.body.email } })
+      .then((user) => {
+        if (!user) {
+          return res.status(401).json({ error: "Utilisateur non trouvé !" });
+        }
+        bcrypt
+          .compare(req.body.password, user.password)
+          .then((valid) => {
+            if (!valid) {
+              return res
+                .status(401)
+                .json({ error: "Mot de passe incorrect !" });
+            }
+            res.status(200).json({
+              userId: user.id,
+              token: jwt.sign(
+                { userId: user.id },
+                `${process.env.JWT_SECRET_KEY}`,
+
+                { expiresIn: "24h" }
+              ),
+            });
+          })
+          .catch((error) => res.status(500).json({ error }));
+      })
+      .catch((error) => res.status(500).json({ error }));
+  },
+
+  /*  login: function (req, res) {
     // Params
-    var email = req.body.email;
-    var password = req.body.password;
+    let email = req.body.email;
+    let password = req.body.password;
 
     if (email == null || password == null) {
       return res.status(400).json({ error: "missing parameters" });
@@ -121,6 +176,7 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
+              console.log(err);
               return res.status(500).json({ error: "unable to verify user" });
             });
         },
@@ -155,17 +211,16 @@ module.exports = {
         }
       }
     );
-  },
+  },*/
+
   getUserProfile: function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
-    var userId = jwtUtils.getUserId(headerAuth);
-
-    if (userId < 0) return res.status(400).json({ error: "wrong token" });
+    const userRes = res.locals.user;
+    console.log("userid:", userRes.id);
 
     models.User.findOne({
       attributes: ["id", "email", "firstName", "lastName", "bio", "isAdmin"],
-      where: { id: userId },
+      where: { id: userRes.id },
     })
       .then(function (user) {
         if (user) {
@@ -175,43 +230,149 @@ module.exports = {
         }
       })
       .catch(function (err) {
+        console.log(err);
         res.status(500).json({ error: "cannot fetch user" });
       });
   },
 
   updateUserProfile: function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
-    var userId = jwtUtils.getUserId(headerAuth);
+    // let userId = res.locals.user;
 
     // Params
-    var bio = req.body.bio;
+    let bio = req.body.bio;
+
+    asyncLib.waterfall(
+      [
+        // function (done) {
+        //   models.User.findOne({
+        //     attributes: ["id", "bio"],
+        //     where: { id: userId },
+        //   })
+        //     .then(function (userFound) {
+        //       done(null, userFound);
+        //     })
+        //     .catch(function (err) {
+        //       return res.status(500).json({ error: "unable to verify user" });
+        //     });
+        // },
+        function (done) {
+          res.locals.user
+            .update({
+              bio: bio ? bio : res.locals.user.bio,
+            })
+            .then(function (userUpdated) {
+              done(userUpdated);
+            })
+            .catch(function (err) {
+              console.log(err);
+              res.status(500).json({ error: "cannot update user" });
+            });
+        },
+      ],
+      function (userFound) {
+        if (userFound) {
+          return res.status(201).json(userFound);
+        } else {
+          return res.status(500).json({ error: "cannot update user profile" });
+        }
+      }
+    );
+  },
+
+  deleteUserProfile: function (req, res) {
+    // Getting auth header
+    let userId = res.locals.user.id;
 
     asyncLib.waterfall(
       [
         function (done) {
           models.User.findOne({
-            attributes: ["id", "bio"],
             where: { id: userId },
           })
             .then(function (userFound) {
               done(null, userFound);
             })
             .catch(function (err) {
+              console.log(err);
               return res.status(500).json({ error: "unable to verify user" });
             });
         },
-        function (userFound, done) {
+        function (userFound) {
           if (userFound) {
-            userFound
-              .update({
-                bio: bio ? bio : userFound.bio,
+            models.Like.destroy({ where: { userId: userFound.id } }) //detruit la ou le user a like
+              .then(() =>
+                models.Publication.findAll({
+                  where: { userId: userFound.id },
+                })
+              )
+              .then((
+                data // detruit les comm de ses publication
+              ) =>
+                models.Commentary.destroy({
+                  where: { publicationId: data.id },
+                })
+              )
+              .catch(function (err) {
+                console.log(err);
+                return res.status(500).json({
+                  error:
+                    "impossible de detruire les commentaire de ses publications",
+                });
               })
+              .then(() =>
+                models.Publication.findAll({
+                  //detruit tout les like de ses publications
+                  where: { userId: userFound.id },
+                })
+              )
+              .then((publi) =>
+                models.Like.destroy({
+                  where: { publicationId: publi.id },
+                })
+              )
+              .catch(function (err) {
+                console.log(err);
+                return res.status(500).json({
+                  error: "impossible de detruire les likes de ses publi",
+                });
+              })
+
+              .then(() =>
+                models.Publication.findAll({
+                  //detruit  ses publications
+                  where: { userId: userFound.id },
+                })
+              )
+              .then(() =>
+                models.Publication.destroy({
+                  where: { userId: userFound.id },
+                })
+              )
+              .catch(function (err) {
+                console.log(err);
+                return res
+                  .status(500)
+                  .json({ error: "impossible de detruire ses publi" });
+              })
+              .then(() =>
+                models.User.destroy({
+                  where: { id: userFound.id },
+                })
+              )
+              .catch(function (err) {
+                console.log(err);
+                return res
+                  .status(500)
+                  .json({ error: "impossible de supprimer le user" });
+              })
+
               .then(function () {
-                done(userFound);
+                res.status(201).json({ message: "user supprimé !" });
               })
               .catch(function (err) {
-                res.status(500).json({ error: "cannot update user" });
+                console.log(err);
+                res.status(500).json({ error: "impossible de supprimer user" });
               });
           } else {
             res.status(404).json({ error: "user not found" });

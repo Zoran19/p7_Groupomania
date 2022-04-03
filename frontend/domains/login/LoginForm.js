@@ -1,4 +1,3 @@
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -20,7 +19,6 @@ export function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  //const onSubmit = (data) => console.log(data);
   const router = useRouter();
 
   const submit = async (data) => {
@@ -38,7 +36,7 @@ export function LoginForm() {
 
   console.log(errors);
   return (
-    <Grid item pt={5} pb={5}>
+    <Grid item p={5} className={styles.totalWidth}>
       <Grid
         container
         direction="column"
@@ -46,11 +44,8 @@ export function LoginForm() {
         alignItems="center"
         className={styles.containerForm}
       >
-        <Grid item pb={2} pt={2} m={0} style={{ width: "100%" }}>
-          <div
-            style={{ width: "100%" }}
-            className={`${styles.imageLoginMobile} ${styles.alignementRow}`}
-          >
+        <Grid item pb={2} pt={2} m={0}>
+          <div className={`${styles.imageLoginMobile} ${styles.alignementRow}`}>
             <Image
               src="/images/icon-left-font-monochrome-black.svg"
               alt="MobileLogo"
@@ -111,14 +106,14 @@ export function LoginForm() {
           </form>
 
           <Grid
-            style={{ borderBottom: "1px solid grey", width: "100%" }}
             pb={2}
             mb={3}
             container
             alignItems="center"
             justifyContent={"center"}
+            className={styles.separatorLign}
           >
-            <Typography color="primary">
+            <Typography color="primary" pt={2}>
               <a href={"/"}>Mot de passe oublié ?</a>
             </Typography>
           </Grid>

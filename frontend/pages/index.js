@@ -18,14 +18,6 @@ export default function Home() {
           publications={data}
           refreshPublications={refreshPublications}
         />
-
-        <h2>
-          <Link href="/authentification/login">Login</Link>
-        </h2>
-
-        <h2>
-          <Link href="/authentification/signUp">SignUp</Link>
-        </h2>
       </IndexLayout>
     </div>
   );

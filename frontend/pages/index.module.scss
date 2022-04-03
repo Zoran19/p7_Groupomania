@@ -15,6 +15,9 @@
   }
 }
 
+.iconProfilNavbar {
+  padding-top:0;
+}
 .alignementRow {
   display: flex;
   justify-content: center;
@@ -50,9 +53,44 @@
   background-color: #ededed;
   padding: 10px;
   border-radius: 5px;
-
   @include variable.mobile-only {
     width: 50%;
+  }
+}
+
+.imagePubli {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+}
+
+.likePubli {
+  margin-left: 5px;
+  margin-right: 20px;
+  @include variable.mobile-only {
+    font-size: 14px;
+  }
+}
+.containerButtonLikeAndComm {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  @include variable.mobile-only {
+    justify-content: center;
+  }
+}
+
+.buttonDeleteAndUpdate {
+  font-size: 30px;
+  @include variable.mobile-only {
+    font-size: 26px;
+  }
+}
+
+.datePubli {
+  @include variable.mobile-only {
+    font-size: 14px;
+    color: #444444;
   }
 }
 

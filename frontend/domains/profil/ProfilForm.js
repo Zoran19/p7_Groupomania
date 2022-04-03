@@ -26,6 +26,12 @@ export function ProfilForm({ profil, refreshProfil }) {
     void router.push("/");
   };
 
+  const submitDelete = async () => {
+    await fetchApi("users/me", "DELETE")
+      .then(() => localStorage.clear())
+      .then(() => router.push("/authentification/login"));
+  };
+
   return (
     <div className={styles.containerForm}>
       <Container>
@@ -64,7 +70,7 @@ export function ProfilForm({ profil, refreshProfil }) {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Ecriver votre bio"
+                  label="Ecrivez votre bio"
                   variant="outlined"
                   name="bio"
                   multiline
@@ -90,16 +96,15 @@ export function ProfilForm({ profil, refreshProfil }) {
           </form>
 
           <Grid item xs={12} pb={1} pt={1} className={styles.alignementRow}>
-            <Link href="/authentification/signIn">
-              <Button
-                type="submit"
-                variant="contained"
-                color="error"
-                size="large"
-              >
-                Supprimer votre compte
-              </Button>
-            </Link>
+            <Button
+              type="submit"
+              variant="contained"
+              color="error"
+              size="large"
+              onClick={() => submitDelete()}
+            >
+              Supprimer votre compte
+            </Button>
           </Grid>
         </Grid>
       </Container>

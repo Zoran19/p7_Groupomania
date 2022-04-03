@@ -4,18 +4,18 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import styles from "../pages/index.module.scss";
 
 export default function Navbar() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const router = useRouter();
   const handleChange = (event) => {
     setAuth(event.target.checked);
   };
@@ -26,6 +26,11 @@ export default function Navbar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const deconnexion = () => {
+    localStorage.removeItem("jwt_token");
+    router.push("/authentification/login");
   };
 
   return (
@@ -47,12 +52,12 @@ export default function Navbar() {
           {auth && (
             <div>
               <IconButton
-                size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
+                className={styles.iconProfilNavbar}
               >
                 <AccountCircle />
               </IconButton>
@@ -77,7 +82,10 @@ export default function Navbar() {
                     <a>Profil</a>
                   </Link>
                 </MenuItem>
-                <MenuItem onClick={handleClose}> Se Déconnecter</MenuItem>
+                <MenuItem onClick={() => deconnexion()}>
+                  {" "}
+                  Se Déconnecter
+                </MenuItem>
               </Menu>
             </div>
           )}

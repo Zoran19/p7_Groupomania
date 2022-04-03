@@ -19,7 +19,6 @@ export function Footer() {
             alt="Vercel Logo"
             width={200}
             height={220}
-            style={{ marginLeft: "50px" }}
           />
         </Grid>
       </Grid>
