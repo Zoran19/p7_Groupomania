@@ -1,6 +1,4 @@
 const models = require("../models");
-const asyncLib = require("async");
-const jwtUtils = require("../utils/jwt.utils");
 
 const ITEMS_LIMIT = 50;
 

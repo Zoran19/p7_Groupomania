@@ -237,7 +237,7 @@ module.exports = {
 
   updateUserProfile: function (req, res) {
     // Getting auth header
-    // let userId = res.locals.user;
+    let userId = res.locals.user;
 
     // Params
     let bio = req.body.bio;
@@ -257,7 +257,7 @@ module.exports = {
         //     });
         // },
         function (done) {
-          res.locals.user
+          userId
             .update({
               bio: bio ? bio : res.locals.user.bio,
             })
@@ -284,108 +284,68 @@ module.exports = {
     // Getting auth header
     let userId = res.locals.user.id;
 
-    asyncLib.waterfall(
-      [
-        function (done) {
-          models.User.findOne({
-            where: { id: userId },
-          })
-            .then(function (userFound) {
-              done(null, userFound);
-            })
-            .catch(function (err) {
-              console.log(err);
-              return res.status(500).json({ error: "unable to verify user" });
-            });
-        },
-        function (userFound) {
-          if (userFound) {
-            models.Like.destroy({ where: { userId: userFound.id } }) //detruit la ou le user a like
-              .then(() =>
-                models.Publication.findAll({
-                  where: { userId: userFound.id },
-                })
-              )
-              .then((
-                data // detruit les comm de ses publication
-              ) =>
-                models.Commentary.destroy({
-                  where: { publicationId: data.id },
-                })
-              )
-              .catch(function (err) {
-                console.log(err);
-                return res.status(500).json({
-                  error:
-                    "impossible de detruire les commentaire de ses publications",
-                });
-              })
-              .then(() =>
-                models.Publication.findAll({
-                  //detruit tout les like de ses publications
-                  where: { userId: userFound.id },
-                })
-              )
-              .then((publi) =>
-                models.Like.destroy({
-                  where: { publicationId: publi.id },
-                })
-              )
-              .catch(function (err) {
-                console.log(err);
-                return res.status(500).json({
-                  error: "impossible de detruire les likes de ses publi",
-                });
-              })
+    if (userId) {
+      models.Like.destroy({ where: { userId: userId } }) //detruit la ou le user a like
+        .then(() => models.Publication.findAll({ where: { userId: userId } })) // detruit les commentaire de ses publications
+        .catch(function (err) {
+          console.log(err);
+          return res.status(500).json({
+            error: "impossible de récupérer les publications du user ",
+          });
+        })
+        .then((data) =>
+          data.map((element) =>
+            models.Commentary.destroy({ where: { publicationId: element.id } })
+          )
+        )
+        .catch(function (err) {
+          console.log(err);
+          return res.status(500).json({
+            error:
+              "impossible de detruire les commentaires de ses publications",
+          });
+        })
 
-              .then(() =>
-                models.Publication.findAll({
-                  //detruit  ses publications
-                  where: { userId: userFound.id },
-                })
-              )
-              .then(() =>
-                models.Publication.destroy({
-                  where: { userId: userFound.id },
-                })
-              )
-              .catch(function (err) {
-                console.log(err);
-                return res
-                  .status(500)
-                  .json({ error: "impossible de detruire ses publi" });
-              })
-              .then(() =>
-                models.User.destroy({
-                  where: { id: userFound.id },
-                })
-              )
-              .catch(function (err) {
-                console.log(err);
-                return res
-                  .status(500)
-                  .json({ error: "impossible de supprimer le user" });
-              })
+        .then(() => models.Publication.findAll({ where: { userId: userId } })) //detruit tout les like de ses publications
+        .catch(function (err) {
+          console.log(err);
+          return res.status(500).json({
+            error: "impossible récupérer les publications du user",
+          });
+        })
+        .then((data) =>
+          data.map((element) =>
+            models.Like.destroy({ where: { publicationId: element.id } })
+          )
+        )
+        .catch(function (err) {
+          console.log(err);
+          return res.status(500).json({
+            error: "impossible de detruire les likes de ses publi",
+          });
+        })
 
-              .then(function () {
-                res.status(201).json({ message: "user supprimé !" });
-              })
-              .catch(function (err) {
-                console.log(err);
-                res.status(500).json({ error: "impossible de supprimer user" });
-              });
-          } else {
-            res.status(404).json({ error: "user not found" });
-          }
-        },
-      ],
-      function (userFound) {
-        if (userFound) {
-          return res.status(201).json(userFound);
-        } else {
-          return res.status(500).json({ error: "cannot update user profile" });
-        }
-      }
-    );
+        .then(() => models.Publication.destroy({ where: { userId: userId } })) //detruit ses publications
+        .catch(function (err) {
+          console.log(err);
+          return res
+            .status(500)
+            .json({ error: "impossible de detruire ses publications" });
+        })
+        .then(() => models.Commentary.destroy({ where: { userId: userId } })) // supprimer les comm du user
+        .then(() => models.User.destroy({ where: { id: userId } })) //supprime le user
+        .catch(function (err) {
+          console.log(err);
+          return res
+            .status(500)
+            .json({ error: "impossible de supprimer le user" });
+        })
+
+        .then(function () {
+          res.status(201).json({ message: "user supprimé !" });
+        });
+    } else {
+      res.status(404).json({ error: "user not found" });
+    }
   },
 };
