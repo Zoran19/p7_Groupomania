@@ -1,10 +1,10 @@
 // Imports
 let express = require("express");
-let usersCtrl = require("./routes/usersCtrl");
-let publicationsCtrl = require("./routes/publicationsCtrl");
-let likesCtrl = require("./routes/likesCtrl");
-let commentaryCtrl = require("./routes/commentaryCtrl");
-const uploadCtrl = require("./routes/upload");
+let usersCtrl = require("./controllers/usersCtrl");
+let publicationsCtrl = require("./controllers/publicationsCtrl");
+let likesCtrl = require("./controllers/likesCtrl");
+let commentaryCtrl = require("./controllers/commentaryCtrl");
+const uploadCtrl = require("./controllers/uploadCtrl");
 const auth = require("../backend/middleware/auth");
 //const multers = require("../backend/middleware/multer-config");
 const multer = require("multer");
@@ -22,14 +22,14 @@ const uploadMiddleware = multer({ storage: storage });
 exports.router = (function () {
   let apiRouter = express.Router();
 
-  // Users routes
+  // Users controllers
   apiRouter.post("/users/register/", usersCtrl.register);
   apiRouter.post("/users/login/", usersCtrl.login);
   apiRouter.get("/users/me/", auth, usersCtrl.getUserProfile);
   apiRouter.put("/users/me/", auth, usersCtrl.updateUserProfile);
   apiRouter.delete("/users/me/", auth, usersCtrl.deleteUserProfile);
 
-  // publications routes
+  // publications controllers
   apiRouter.post("/publications", auth, publicationsCtrl.createPublication);
   apiRouter.get("/publications/", auth, publicationsCtrl.listPublications);
   apiRouter.delete(

@@ -17,7 +17,7 @@ server.use(bodyParser.json());
 // static files (upload)
 server.use("/uploads", express.static("uploads"));
 
-// Configure routes
+// Configure controllers
 server.get("/", function (req, res) {
   res.setHeader("Content-Type", "text/html");
   res.status(200).send("<h1>Bonjour sur mon super server</h1>");
