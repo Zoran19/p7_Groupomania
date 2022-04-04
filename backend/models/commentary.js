@@ -1,6 +1,6 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  var Commentary = sequelize.define(
+  const Commentary = sequelize.define(
     "Commentary",
     {
       commentary: DataTypes.STRING,

@@ -1,6 +1,6 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  var Publication = sequelize.define(
+  let Publication = sequelize.define(
     "Publication",
     {
       content: DataTypes.STRING,
@@ -8,17 +8,16 @@ module.exports = (sequelize, DataTypes) => {
       likes: DataTypes.INTEGER,
     },
     {
-      // classMethods: {
-      //   associate: function(models) {
-      //     // associations can be defined here
-      //
-      //     models.Publication.belongsTo(models.User, {
-      //       foreignKey: {
-      //         allowNull: false
-      //       }
-      //     })
-      //   }
-      // }
+      //classMethods: {
+      //  associate: function (models) {
+      //    // associations can be defined here
+      //    models.Publication.belongsTo(models.User, {
+      //      foreignKey: {
+      //        allowNull: false,
+      //      },
+      //    });
+      //  },
+      //},
     }
   );
   Publication.associate = function (models) {

@@ -1,7 +1,6 @@
 // Imports
-var models = require("../models");
-var jwtUtils = require("../utils/jwt.utils");
-var asyncLib = require("async");
+const models = require("../models");
+const asyncLib = require("async");
 
 // Constants
 const DISLIKED = 0;
@@ -14,7 +13,7 @@ module.exports = {
     let userId = res.locals.user.id;
 
     // Params
-    var publicationId = parseInt(req.params.publicationId);
+    const publicationId = parseInt(req.params.publicationId);
 
     if (publicationId <= 0) {
       return res.status(400).json({ error: "invalid parameters" });
@@ -136,7 +135,7 @@ module.exports = {
     let userId = res.locals.user.id;
 
     // Params
-    var publicationId = parseInt(req.params.publicationId);
+    const publicationId = parseInt(req.params.publicationId);
 
     if (publicationId <= 0) {
       return res.status(400).json({ error: "invalid parameters" });

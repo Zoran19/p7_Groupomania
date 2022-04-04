@@ -1,7 +1,6 @@
 // Imports
-var models = require("../models");
-var jwtUtils = require("../utils/jwt.utils");
-var asyncLib = require("async");
+const models = require("../models");
+const asyncLib = require("async");
 
 const ITEMS_LIMIT = 50;
 // Routes
@@ -89,8 +88,8 @@ module.exports = {
       return res.status(400).json({ error: "invalid parameters" });
     }
 
-    var limit = parseInt(req.query.limit);
-    var offset = parseInt(req.query.offset);
+    let limit = parseInt(req.query.limit);
+    let offset = parseInt(req.query.offset);
 
     if (limit > ITEMS_LIMIT) {
       limit = ITEMS_LIMIT;
@@ -146,8 +145,8 @@ module.exports = {
   listCommentaries: function (req, res) {
     // Params
 
-    var limit = parseInt(req.query.limit);
-    var offset = parseInt(req.query.offset);
+    let limit = parseInt(req.query.limit);
+    let offset = parseInt(req.query.offset);
 
     if (limit > ITEMS_LIMIT) {
       limit = ITEMS_LIMIT;
@@ -187,8 +186,8 @@ module.exports = {
     let userId = res.locals.user.id;
     const user = await models.User.findOne({ where: { id: userId } });
     // Params
-    var publicationId = parseInt(req.params.publicationId);
-    var commentaryId = parseInt(req.params.commentaryId);
+    let publicationId = parseInt(req.params.publicationId);
+    let commentaryId = parseInt(req.params.commentaryId);
 
     if (publicationId <= 0) {
       return res.status(400).json({ error: "invalid parameters" });
