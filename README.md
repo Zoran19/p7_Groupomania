@@ -15,9 +15,9 @@
   <br />
 - Créer un fichier `.env` dans le dossier `/backend`, entrer le host, les identifiants de votre utilisateur admin et le nom de la base de données que vous souhaitez créer.
   <br />
-  Exemple type du ficher `.env` :
+  Exemple type du ficher voir le fichier `.env.example` :
 
- voir le .env.example
+
 
 ## Configuration de la Base de données MySQL
 
