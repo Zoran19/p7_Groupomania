@@ -1,44 +1,45 @@
-'use strict';
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Likes', {
+    await queryInterface.createTable("Likes", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       publicationId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references:{
+        references: {
           model: "Publications",
-          key:"id"
-        }
+          key: "id",
+        },
       },
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references:{
+        references: {
           model: "Users",
-          key:"id"
-        }
+          key: "id",
+        },
       },
-      isLike : {
+      isLike: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
+  // eslint-disable-next-line no-unused-vars
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Likes');
-  }
+    await queryInterface.dropTable("Likes");
+  },
 };

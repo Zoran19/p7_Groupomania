@@ -76,7 +76,7 @@ module.exports = {
           if (!userAlreadyLikedFound) {
             publicationFound
               .addUser(userFound, { isLike: LIKED })
-              .then(function (alreadyLikeFound) {
+              .then(function () {
                 done(null, publicationFound, userFound);
               })
               .catch(function (err) {
@@ -198,7 +198,7 @@ module.exports = {
           if (!userAlreadyLikedFound) {
             publicationFound
               .addUser(userFound, { isLike: DISLIKED })
-              .then(function (alreadyLikeFound) {
+              .then(function () {
                 done(null, publicationFound, userFound);
               })
               .catch(function (err) {
