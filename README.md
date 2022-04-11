@@ -46,8 +46,4 @@
 
 ### Droits Admin
 
-Pour tester les droits d'admin, changez la valeur en 'admin' dans le champ account qui se trouve dans la table users de votre base de données.
-
-### NB
-
-Si un problème d'affichage surgit après avoir lancer plusieurs fois le server frontend, nettoyer le cache du localstorage
+Pour tester les droits d'admin, changez la valeur en 'isAdmin'  en 1 dans la table Users de votre base de données.
