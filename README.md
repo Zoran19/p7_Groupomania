@@ -42,7 +42,7 @@
 
 ## Lancer le serveur npm start
 
-- Écrire dans le terminal `npm start` pour lancer le serveur
+- Écrire dans le terminal `npm start` pour lancer le serveur une fois le serveur lancer aller sur url d'authentification `localhost:3000/authentification/login`
 
 ### Droits Admin
 
