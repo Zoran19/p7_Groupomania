@@ -5,100 +5,6 @@ const jwt = require("jsonwebtoken");
 
 // Routes
 module.exports = {
-  /* register: function (req, res) {
-    // Params
-    let email = req.body.email;
-    let firstName = req.body.firstName;
-    let lastName = req.body.lastName;
-    let password = req.body.password;
-    let bio = req.body.bio;
-
-    if (
-      email == null ||
-      firstName == null ||
-      lastName == null ||
-      password == null
-    ) {
-      return res.status(400).json({ error: "missing parameters" });
-    }
-
-    if (firstName.length >= 13 || firstName.length <= 1) {
-      return res
-        .status(400)
-        .json({ error: "wrong firstName (must be length 2 - 12)" });
-    }
-
-    if (lastName.length >= 13 || lastName.length <= 1) {
-      return res
-        .status(400)
-        .json({ error: "wrong lastName (must be length 2 - 12)" });
-    }
-
-    if (!EMAIL_REGEX.test(email)) {
-      return res.status(400).json({ error: "email is not valid" });
-    }
-
-    if (!PASSWORD_REGEX.test(password)) {
-      return res.status(400).json({
-        error:
-          "password invalid (must length 4 - 8 and include 1 number at least)",
-      });
-    }
-
-    asyncLib.waterfall(
-      [
-        function (done) {
-          models.User.findOne({
-            attributes: ["email"],
-            where: { email: email },
-          })
-            .then(function (userFound) {
-              done(null, userFound);
-            })
-            .catch(function (err) {
-              console.error(err);
-              return res.status(500).json({ error: "unable to verify user" });
-            });
-        },
-        function (userFound, done) {
-          if (!userFound) {
-            bcrypt.hash(password, 5, function (err, bcryptedPassword) {
-              done(null, userFound, bcryptedPassword);
-            });
-          } else {
-            return res.status(409).json({ error: "user already exist" });
-          }
-        },
-        function (userFound, bcryptedPassword, done) {
-          let newUser = models.User.create({
-            email: email,
-            firstName: firstName,
-            lastName: lastName,
-            password: bcryptedPassword,
-            bio: bio,
-            isAdmin: 0,
-          })
-            .then(function (newUser) {
-              done(newUser);
-            })
-            .catch(function (err) {
-              console.error(err);
-              return res.status(500).json({ error: "cannot add user" });
-            });
-        },
-      ],
-      function (newUser) {
-        if (newUser) {
-          return res.status(201).json({
-            userId: newUser.id,
-          });
-        } else {
-          return res.status(500).json({ error: "cannot add user" });
-        }
-      }
-    );
-  },*/
-
   register: (req, res) => {
     models.User.findOne({ where: { email: req.body.email } }).then((user) => {
       if (user) {
@@ -157,62 +63,6 @@ module.exports = {
       .catch((error) => res.status(500).json({ error }));
   },
 
-  /*  login: function (req, res) {
-    // Params
-    let email = req.body.email;
-    let password = req.body.password;
-
-    if (email == null || password == null) {
-      return res.status(400).json({ error: "missing parameters" });
-    }
-
-    asyncLib.waterfall(
-      [
-        function (done) {
-          models.User.findOne({
-            where: { email: email },
-          })
-            .then(function (userFound) {
-              done(null, userFound);
-            })
-            .catch(function (err) {
-              console.log(err);
-              return res.status(500).json({ error: "unable to verify user" });
-            });
-        },
-        function (userFound, done) {
-          if (userFound) {
-            bcrypt.compare(password, userFound.password, function (
-              errBycrypt,
-              resBycrypt
-            ) {
-              done(null, userFound, resBycrypt);
-            });
-          } else {
-            return res.status(404).json({ error: "user not exist in DB" });
-          }
-        },
-        function (userFound, resBycrypt, done) {
-          if (resBycrypt) {
-            done(userFound);
-          } else {
-            return res.status(403).json({ error: "invalid password" });
-          }
-        },
-      ],
-      function (userFound) {
-        if (userFound) {
-          return res.status(201).json({
-            userId: userFound.id,
-            token: jwtUtils.generateTokenForUser(userFound),
-          });
-        } else {
-          return res.status(500).json({ error: "cannot log on user" });
-        }
-      }
-    );
-  },*/
-
   getUserProfile: function (req, res) {
     // Getting auth header
     const userRes = res.locals.user;
@@ -244,18 +94,6 @@ module.exports = {
 
     asyncLib.waterfall(
       [
-        // function (done) {
-        //   models.User.findOne({
-        //     attributes: ["id", "bio"],
-        //     where: { id: userId },
-        //   })
-        //     .then(function (userFound) {
-        //       done(null, userFound);
-        //     })
-        //     .catch(function (err) {
-        //       return res.status(500).json({ error: "unable to verify user" });
-        //     });
-        // },
         function (done) {
           userId
             .update({
@@ -332,7 +170,13 @@ module.exports = {
             .status(500)
             .json({ error: "impossible de detruire ses publications" });
         })
-        .then(() => models.Commentary.destroy({ where: { userId: userId } })) // supprimer les comm du user
+        .then(() => models.Commentary.destroy({ where: { userId: userId } }))
+        .catch(function (err) {
+          console.log(err);
+          return res
+            .status(500)
+            .json({ error: "impossible de supprimer les comm" });
+        }) // supprimer les comm du user
         .then(() => models.User.destroy({ where: { id: userId } })) //supprime le user
         .catch(function (err) {
           console.log(err);
