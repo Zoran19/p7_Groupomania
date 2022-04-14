@@ -4,9 +4,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import React from "react";
 import styles from "../../pages/index.module.scss";
-import { Typography } from "@mui/material";
-import Link from "next/link";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { fetchApi } from "../../api/fetchApi";
 import { useRouter } from "next/router";
@@ -22,14 +19,24 @@ export function ProfilForm({ profil, refreshProfil }) {
   const submit = async (data) => {
     const loginData = await fetchApi("users/me", "PUT", {
       bio: data.bio,
-    }).then(() => refreshProfil());
+    })
+      .then(() => refreshProfil())
+      .catch((err) => {
+        console.log(err);
+      });
     void router.push("/");
   };
 
   const submitDelete = async () => {
     await fetchApi("users/me", "DELETE")
       .then(() => localStorage.clear())
-      .then(() => router.push("/authentification/login"));
+      .catch((err) => {
+        console.log(err);
+      })
+      .then(() => router.push("/authentification/login"))
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

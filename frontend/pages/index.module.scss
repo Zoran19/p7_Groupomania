@@ -16,7 +16,7 @@
 }
 
 .iconProfilNavbar {
-  padding-top:0;
+  padding-top: 0;
 }
 .alignementRow {
   display: flex;
@@ -88,12 +88,19 @@
 }
 
 .datePubli {
+  color: #444444;
+  font-size: 14px;
   @include variable.mobile-only {
-    font-size: 14px;
-    color: #444444;
+    font-size: 12px;
   }
 }
 
+.buttonSendModifPubli{
+  width: 20%;
+}
+.widthModifPubli {
+  width: 80%;
+}
 .containerLogoMessage {
   display: flex;
   flex-direction: row;

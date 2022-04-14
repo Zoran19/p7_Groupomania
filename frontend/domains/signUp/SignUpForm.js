@@ -1,4 +1,3 @@
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -19,31 +18,38 @@ export function SignUpForm() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  //const onSubmit = (data) => console.log(data);
+
   const router = useRouter();
 
   const submit = async (data) => {
     await fetch("http://localhost:8080/api/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // credentials: "include",
       body: JSON.stringify({
         email: data.email,
         firstName: data.firstName,
         lastName: data.lastName,
         password: data.password,
       }),
-    }).then(async (response) => {
-      const loginData = await fetchApi("users/login", "POST", {
-        email: data.email,
-        password: data.password,
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error("Erreur mail déja existant");
+        }
+        const loginData = await fetchApi("users/login", "POST", {
+          email: data.email,
+          password: data.password,
+        });
+        if (loginData.token) {
+          localStorage.setItem("jwt_token", loginData.token);
+          cache.clear();
+          router.push("/");
+        }
+      })
+      .catch((err) => {
+        alert(err.message);
+        console.log("voici l'erreur connexion:", err);
       });
-      localStorage.setItem("jwt_token", loginData.token);
-
-      cache.clear();
-
-      router.push("/");
-    });
   };
 
   return (
@@ -151,7 +157,7 @@ export function SignUpForm() {
         </Grid>
 
         <Grid item xs={12} pb={1} pt={2} className={styles.alignementRow}>
-          <Link href="/authentification/login">
+          <Link href="/authentification/login" passHref>
             <Button
               type="submit"
               variant="contained"

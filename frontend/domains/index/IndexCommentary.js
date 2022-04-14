@@ -53,6 +53,9 @@ export function IndexCommentary({ publication }) {
       commentary: comm.comment,
     })
       .then(() => setShowCreateCommentaryForm(false))
+      .catch((err) => {
+        console.log(err);
+      })
       .then(() => refreshCommentaries())
       .catch((err) => {
         console.log(err);
@@ -99,6 +102,7 @@ export function IndexCommentary({ publication }) {
             }}
           >
             <ThumbUpIcon />
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
             <Typography className={styles.likePubli}>J'aime</Typography>
           </Button>
           <Button
@@ -109,7 +113,7 @@ export function IndexCommentary({ publication }) {
           >
             <ThumbDownIcon color={"error"} />
             <Typography color={"error"} className={styles.likePubli}>
-              J'aime pas
+              {"J'aime pas"}
             </Typography>
           </Button>
         </Grid>

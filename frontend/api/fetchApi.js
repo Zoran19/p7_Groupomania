@@ -6,5 +6,14 @@ export const fetchApi = (path, method = "GET", body) => {
     }),
     method,
     body: JSON.stringify(body),
-  }).then((response) => response.json());
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Une erreur est arrivée ${response.status}`);
+      }
+      return response.json();
+    })
+    .catch((err) => {
+      console.log("voici l'erreur: ", err);
+    });
 };

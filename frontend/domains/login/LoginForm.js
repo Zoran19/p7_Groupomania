@@ -26,15 +26,13 @@ export function LoginForm() {
       email: data.email,
       password: data.password,
     });
-    localStorage.setItem("jwt_token", loginData.token);
-    console.log(loginData);
-    console.log(loginData.token);
-    cache.clear();
-
-    router.push("/");
+    if (loginData.token) {
+      localStorage.setItem("jwt_token", loginData.token);
+      cache.clear();
+      router.push("/");
+    }
   };
 
-  console.log(errors);
   return (
     <Grid item p={5} className={styles.totalWidth}>
       <Grid
@@ -66,7 +64,7 @@ export function LoginForm() {
                   {...register("email", {
                     pattern: {
                       value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                      message: "format email attendu", // JS only: <p>error message</p> TS only support string
+                      message: "format email attendu",
                     },
                     required: "Ce champ est obligatoire",
                   })}
@@ -119,13 +117,12 @@ export function LoginForm() {
           </Grid>
 
           <Grid item xs={12} pb={1} className={styles.alignementRow}>
-            <Link href="/authentification/signUp">
+            <Link href="/authentification/signUp" passHref>
               <Button
                 type="submit"
                 variant="contained"
                 color="success"
                 size="large"
-                style={{ paddingTop: "15px", paddingBottom: "15px" }}
               >
                 Créer un nouveau compte
               </Button>

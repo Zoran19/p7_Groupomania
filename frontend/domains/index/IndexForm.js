@@ -20,7 +20,6 @@ export function IndexForm({ refreshPublications }) {
   } = useForm();
 
   const submit = async (data) => {
-    console.log("data:", data);
     await fetchApi("/publications", "POST", {
       content: data.content,
       attachment: data.attachment,
@@ -40,14 +39,17 @@ export function IndexForm({ refreshPublications }) {
       }),
       method,
       body: body,
-    }).then((response) => response.json());
+    })
+      .then((response) => response.json())
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const send = async () => {
     const data = new FormData();
     data.append("file", uploadImage);
-    // data.append("foo", "bar");
-    console.log("data:", data);
+
     const response = await fetchUpload("upload", "POST", data);
     setValue("attachment", response.filename);
     setOpen(true);
@@ -67,7 +69,7 @@ export function IndexForm({ refreshPublications }) {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Ecriver votre message"
+                  label="Ecrivez votre message"
                   variant="outlined"
                   name="content"
                   multiline
@@ -80,14 +82,14 @@ export function IndexForm({ refreshPublications }) {
                 <input type={"hidden"} name={"attachment"} />
               </Grid>
               <Typography color={"error"}>{errors.content?.message}</Typography>
-              <Grid item sm={4} xs={6} mb={1} style={{ width: "100%" }}>
+              <Grid item sm={4} xs={6} mb={1} className={styles.totalWidth}>
                 <input
                   type="file"
                   name="uploadFile"
                   accept="image/*"
                   onChange={(event) => {
                     const image = event.target.files[0];
-                    console.log("file:", image);
+
                     setUploadImage(image);
                   }}
                 />
@@ -110,7 +112,7 @@ export function IndexForm({ refreshPublications }) {
                         </IconButton>
                       }
                     >
-                      L'image à bien été ajouté
+                      {"L'image à bien été ajouté"}
                     </Alert>
                   </Collapse>
                 </Grid>

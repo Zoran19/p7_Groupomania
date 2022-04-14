@@ -16,7 +16,7 @@ export function Footer() {
         <Grid item>
           <Image
             src="/images/icon-left-font-monochrome-black.png"
-            alt="Vercel Logo"
+            alt="Logo"
             width={200}
             height={220}
           />

@@ -1,6 +1,5 @@
 import { SignUpForm } from "./SignUpForm";
 import React from "react";
-import { SignUpImage } from "./SignUpImage";
 import styles from "../../pages/authentification/login.module.scss";
 import { LoginImage } from "../login/LoginImage";
 

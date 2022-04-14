@@ -20,16 +20,12 @@ export function IndexPublication({ publication, refreshPublications }) {
     profile &&
     (profile.id === publication.UserId || profile.isAdmin === true);
 
-  const [displayEditPublication, setDisplayEditPublication] = useState("none");
+  const [displayEditPublication, setDisplayEditPublication] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const [showUpdateCommentaryForm, setShowUpdateCommentaryForm] = useState(
-    false
-  );
 
   const submitDelete = async () => {
     await fetchApi(`publications/${publication.id}`, "DELETE").then(() =>
@@ -38,11 +34,13 @@ export function IndexPublication({ publication, refreshPublications }) {
   };
 
   const submitUpdate = async (data2) => {
-    console.log("submitUpdate data", data2);
     await fetchApi(`publications/${publication.id}`, "PUT", {
       content: data2.contentFoo,
     })
-      .then(() => setDisplayEditPublication("none"))
+      .then(() => setDisplayEditPublication(false))
+      .catch((err) => {
+        console.log(err);
+      })
       .then(() => refreshPublications())
       .catch((err) => {
         console.log(err);
@@ -68,7 +66,7 @@ export function IndexPublication({ publication, refreshPublications }) {
                 <Button
                   type="submit"
                   onClick={() => {
-                    setShowUpdateCommentaryForm((prevState) => !prevState);
+                    setDisplayEditPublication((prevState) => !prevState);
                   }}
                 >
                   <EditIcon />
@@ -88,16 +86,14 @@ export function IndexPublication({ publication, refreshPublications }) {
           ) : null}
 
           <Grid item pl={2}>
-            <Typography className={styles.datePubli}>
-              date de publication: {date}
-            </Typography>
+            <Typography className={styles.datePubli}>le: {date}</Typography>
           </Grid>
 
           <Grid item pl={2}>
             <h3>{publication.content}</h3>
           </Grid>
         </Grid>
-        {showUpdateCommentaryForm && (
+        {displayEditPublication && (
           <Grid>
             <form onSubmit={handleSubmit(submitUpdate)}>
               <Grid
@@ -107,7 +103,7 @@ export function IndexPublication({ publication, refreshPublications }) {
                 pl={2}
                 mb={2}
               >
-                <Grid item sm={4} style={{ width: "80%" }}>
+                <Grid item sm={4} className={styles.widthModifPubli}>
                   <TextField
                     autoFocus
                     id="modifPubli"
@@ -121,7 +117,7 @@ export function IndexPublication({ publication, refreshPublications }) {
                     })}
                   />
                 </Grid>
-                <Grid item style={{ width: "20%" }}>
+                <Grid item className={styles.buttonSendModifPubli}>
                   <Button type="submit" fontSize="large">
                     <SendIcon />
                   </Button>

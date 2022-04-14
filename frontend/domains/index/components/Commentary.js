@@ -31,7 +31,6 @@ export const Commentary = ({
 
   function submitUpdateCommentary(idCommentary) {
     return async (upComm) => {
-      console.log("publicationId:", publicationId);
       await fetchApi(
         `publications/${publicationId}/comments/${idCommentary}`,
         "PUT",
@@ -40,6 +39,9 @@ export const Commentary = ({
         }
       )
         .then(() => setShowEditCommentaryForm(false))
+        .catch((err) => {
+          console.log(err);
+        })
         .then(() => refreshCommentaries())
         .catch((err) => {
           console.log(err);

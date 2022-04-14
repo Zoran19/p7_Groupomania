@@ -42,7 +42,7 @@ export default function Navbar() {
               <a>
                 <Image
                   src="/images/icon-left-font-monochrome-white.svg"
-                  alt="Vercel Logo"
+                  alt="Logo"
                   width={200}
                   height={80}
                 />
